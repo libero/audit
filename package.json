@@ -1,21 +1,21 @@
 {
-  "name": "audit-service",
-  "version": "1.0.0",
+  "name": "@libero/audit",
+  "version": "0.1.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/main.js",
   "scripts": {
     "test": "jest",
-    "build": "tsc --build tsconfig.json",
-    "lint": "tslint --project tsconfig.json",
+    "build": "tsc",
+    "lint": "tslint",
     "migrate": "dotenv -e ../.env -- ts-node src/migrate.ts",
     "start:dev": "dotenv -e ../.env -- nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/main.ts | pino-pretty",
     "update:internal": "yarn upgrade -P @libero"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/libero/reviewer"
+    "url": "https://github.com/libero/audit"
   },
-  "author": "",
+  "author": "libero-npm@elifesciences.org",
   "license": "MIT",
   "dependencies": {
     "@libero/auth-utils": "^0.1.0",
@@ -28,10 +28,8 @@
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.19.4",
     "node-fetch": "^2.6.0",
-    "nodemon": "^1.19.1",
     "pg": "^7.12.1",
     "pino": "^5.13.2",
-    "typescript": "^3.5.3",
     "uuid": "^3.3.3"
   },
   "devDependencies": {
@@ -42,9 +40,11 @@
     "@types/pino": "^5.8.10",
     "@types/uuid": "^3.4.5",
     "jest": "^24.9.0",
+    "nodemon": "^1.19.4",
     "pino-pretty": "^3.2.1",
     "ts-jest": "^24.1.0",
     "ts-node": "^8.3.0",
-    "tslint": "^5.20.0"
+    "tslint": "^5.20.0",
+    "typescript": "^3.7.2"
   }
 }
