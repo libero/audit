@@ -1,8 +1,13 @@
 language: minimal
+
+env:
+  global:
+    - IMAGE_TAG=$TRAVIS_COMMIT
+
 stages:
   - test
   - build
-  - deploy
+
 jobs:
   include:
     - stage: test
@@ -11,15 +16,15 @@ jobs:
       node_js:
         - 10.16.3
       script:
-        - yarn lint
-        - yarn test
+        - make lint
+        - make test
 
     - stage: build
       name: Build
       script: make build
+      deploy:
+        provider: script
+        script: make push
+        on:
+          branch: master
 
-    - stage: deploy
-      if:
-        branch = master AND type != pull_request
-      name: Deploy
-      script: make push
