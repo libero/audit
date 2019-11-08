@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 export type Endpoint = () => (req: Request, res: Response) => void;
 
-export const HealthCheck: Endpoint = () => (req: Request, res: Response) => {
+// tslint:disable-next-line: variable-name
+export const HealthCheck: Endpoint = () => (_req: Request, res: Response) => {
   res.status(200).json({ ok: true });
 };

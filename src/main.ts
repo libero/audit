@@ -2,7 +2,6 @@
 import { InfraLogger as logger } from './logger';
 import * as express from 'express';
 import { Express, Request, Response } from 'express';
-import { v4 } from 'uuid';
 import { EventBus, RabbitEventBus } from '@libero/event-bus';
 import { UserLoggedInHandler } from './handlers';
 import { HealthCheck } from './endpoints';
@@ -36,7 +35,8 @@ const setupAuditEventBus = async (freshEventBus: EventBus) => {
 };
 
 const setupWebServer = (server: Express) => {
-  server.use('/', (req: Request, res: Response, next: () => void) => {
+  // tslint:disable-next-line: variable-name
+  server.use('/', (req: Request, _res: Response, next: () => void) => {
     logger.info(`${req.method} ${req.path}`, {});
     next();
   });
@@ -49,7 +49,7 @@ const setupWebServer = (server: Express) => {
 const main = async () => {
   logger.info('serviceInit');
 
-  const eventBus = await setupAuditEventBus(
+  await setupAuditEventBus(
     new RabbitEventBus({ url: `amqp://${Config.event.url}` }),
   );
   // TODO: Eventually turn this into a factory method on the EventBus abstract class so that the instance of
