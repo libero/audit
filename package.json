@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "build": "tsc",
-    "lint": "tslint",
+    "lint": "tslint --project tsconfig.json",
     "migrate": "dotenv -e ../.env -- ts-node src/migrate.ts",
     "start:dev": "dotenv -e ../.env -- nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/main.ts | pino-pretty",
     "update:internal": "yarn upgrade -P @libero"
@@ -14,6 +14,12 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/libero/audit"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint",
+      "pre-push": "yarn test"
+    }
   },
   "author": "libero-npm@elifesciences.org",
   "license": "MIT",
@@ -39,6 +45,7 @@
     "@types/node-fetch": "^2.5.0",
     "@types/pino": "^5.8.10",
     "@types/uuid": "^3.4.5",
+    "husky": "^3.0.9",
     "jest": "^24.9.0",
     "nodemon": "^1.19.4",
     "pino-pretty": "^3.2.1",
