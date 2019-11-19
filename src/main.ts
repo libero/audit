@@ -30,7 +30,6 @@ const setupAuditEventBus = async (freshEventBus: EventBus): Promise<EventBus> =>
 };
 
 const setupWebServer = (server: Express): Express => {
-    // tslint:disable-next-line: variable-name
     server.use('/', (req: Request, _res: Response, next: () => void) => {
         logger.info(`${req.method} ${req.path}`, {});
         next();
