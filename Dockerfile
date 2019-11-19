@@ -7,7 +7,9 @@ WORKDIR /app
 
 COPY  tsconfig.build.json \
       tsconfig.json \
-      tslint.json \
+      .eslintrc.js \
+      .eslintignore \
+      .prettierrc.js \
       jest.config.js \
       package.json \
       yarn.lock \

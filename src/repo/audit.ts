@@ -4,14 +4,13 @@ import { InfraLogger as logger } from '../logger';
 import * as Knex from 'knex';
 
 export class KnexAuditRepository implements AuditRepository {
-  public constructor(private readonly knex: Knex<{}, unknown[]>) { }
+    public constructor(private readonly knex: Knex<{}, unknown[]>) {}
 
-  public async putLog( item: AuditLogItem ): Promise<boolean> {
+    public async putLog(item: AuditLogItem): Promise<boolean> {
+        logger.debug('auditWritten', item);
 
-    logger.debug('auditWritten', item);
+        await this.knex('audit').insert<AuditLogItem>(item);
 
-    await this.knex('audit').insert<AuditLogItem>(item);
-
-    return true;
-  }
+        return true;
+    }
 }
