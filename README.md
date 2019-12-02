@@ -4,10 +4,10 @@ This service listens for audit events and persists them
 
 ## Configuration
 
-Copy the .env.example file:
+Copy the example config file
 
 ```sh
-cp .env.example .env
+cp config/config.example.json config/config.json
 ```
 
 ## Setup

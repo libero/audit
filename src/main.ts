@@ -43,6 +43,8 @@ const setupWebServer = (server: Express): Express => {
 const main = async (): Promise<Express> => {
     logger.info('serviceInit');
 
+    console.log(Config.event.url);
+
     await setupAuditEventBus(new RabbitEventBus({ url: `amqp://${Config.event.url}` }));
     // TODO: Eventually turn this into a factory method on the EventBus abstract class so that the instance of
     // the message bus can be created from config.

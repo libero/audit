@@ -7,8 +7,8 @@
     "test": "jest",
     "build": "tsc",
     "lint": "eslint --ext .js,.ts src/",
-    "migrate": "dotenv -e ../.env -- ts-node src/migrate.ts",
-    "start:dev": "dotenv -e ../.env -- nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/main.ts | pino-pretty"
+    "migrate": "CONFIG_PATH=config/config.json ts-node src/migrate.ts",
+    "start:dev": "CONFIG_PATH=config/config.json nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/main.ts | pino-pretty"
   },
   "repository": {
     "type": "git",
@@ -43,7 +43,6 @@
     "@types/uuid": "^3.4.5",
     "@typescript-eslint/eslint-plugin": "^2.7.0",
     "@typescript-eslint/parser": "^2.7.0",
-    "dotenv-cli": "^3.0.0",
     "eslint": "^6.6.0",
     "eslint-config-prettier": "^6.6.0",
     "eslint-plugin-prettier": "^3.1.1",
