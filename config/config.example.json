@@ -1,5 +1,6 @@
 {
     "port": 3004,
+    "rabbitmq_url": "rabbitmq",
     "database": {
         "type": "pg",
         "name": "reviewer_audit",
