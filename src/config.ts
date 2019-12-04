@@ -17,8 +17,14 @@ const eventConfig: EventConfig = {
     url: process.env.RABBITMQ_URL as string,
 };
 
-export const serviceConfig = {
-    port: process.env.AUDIT_PORT || 3004,
+export type ConfigType = {
+    port: number;
+    knex: KnexConfig;
+    event: EventConfig;
+};
+
+export const serviceConfig: ConfigType = {
+    port: Number(process.env.AUDIT_PORT) || 3004,
     knex: knexConfig,
     event: eventConfig,
 };
