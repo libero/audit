@@ -1,4 +1,5 @@
 import { RabbitEventBus } from '@libero/event-bus';
+import { Express } from 'express';
 import { InfraLogger } from './logger';
 import { ConfigType } from 'config';
 import { LiberoEventType } from '@libero/event-types';
@@ -9,7 +10,7 @@ jest.mock('./logger', () => ({
         info: jest.fn(),
     },
 }));
-jest.mock('express', () => () => ({ use: jest.fn(), get: jest.fn() }));
+jest.mock('express', () => (): Express => (({ use: jest.fn(), get: jest.fn() } as unknown) as Express));
 jest.mock('@libero/event-bus', () => ({
     RabbitEventBus: jest.fn(),
 }));
