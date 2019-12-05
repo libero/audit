@@ -33,8 +33,14 @@ const eventConfig: EventConfig = {
     url: config.rabbitmq_url,
 };
 
-export const serviceConfig = {
-    port: config.port || 3004,
+export type ConfigType = {
+    port: number;
+    knex: KnexConfig;
+    event: EventConfig;
+};
+
+export const serviceConfig: ConfigType = {
+    port: Number(config.port) || 3004,
     knex: knexConfig,
     event: eventConfig,
 };
