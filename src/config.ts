@@ -14,7 +14,7 @@ interface Config {
     };
 }
 
-const configPath = process.env.CONFIG_PATH ? process.env.CONFIG_PATH : '/etc/audit/config.json';
+const configPath = process.env.CONFIG_PATH ? process.env.CONFIG_PATH : '/etc/reviewer/config.json';
 const config: Config = JSON.parse(readFileSync(configPath, 'utf8'));
 
 const knexConfig: KnexConfig = {
