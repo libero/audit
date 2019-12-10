@@ -1,10 +1,8 @@
 // Startup the audit service
 import { InfraLogger as logger } from './logger';
 import { Config as KnexConfig } from 'knex';
-import { ConfigType } from 'config';
-import * as express from 'express';
 import { Express, Request, Response } from 'express';
-import { EventBus, RabbitEventBus } from '@libero/event-bus';
+import { EventBus } from '@libero/event-bus';
 import { UserLoggedInHandler } from './handlers';
 import { HealthCheck } from './endpoints';
 import { UserLoggedInPayload, LiberoEventType } from '@libero/event-types';
@@ -14,7 +12,7 @@ import { InfraLogger as Logger } from './logger';
 
 import * as Knex from 'knex';
 
-const setupAuditEventBus = async (freshEventBus: EventBus, knexConfig: KnexConfig): Promise<EventBus> => {
+export const setupAuditEventBus = async (freshEventBus: EventBus, knexConfig: KnexConfig): Promise<EventBus> => {
     const auditController = new AuditController(new KnexAuditRepository(Knex(knexConfig)));
     const eventBus = await freshEventBus.init([LiberoEventType.userLoggedInIdentifier], 'audit');
 
@@ -29,7 +27,7 @@ const setupAuditEventBus = async (freshEventBus: EventBus, knexConfig: KnexConfi
     return eventBus;
 };
 
-const setupWebServer = (server: Express): Express => {
+export const setupWebServer = (server: Express): Express => {
     server.use('/', (req: Request, _res: Response, next: () => void) => {
         logger.info(`${req.method} ${req.path}`, {});
         next();
@@ -38,11 +36,4 @@ const setupWebServer = (server: Express): Express => {
     server.get('/health', HealthCheck());
 
     return server;
-};
-
-export default async (config: ConfigType): Promise<Express> => {
-    logger.info('serviceInit');
-    await setupAuditEventBus(new RabbitEventBus({ url: `amqp://${config.event.url}` }), config.knex);
-    const app = setupWebServer(express());
-    return app;
 };
