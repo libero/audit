@@ -18,6 +18,7 @@ jobs:
       script:
         - make lint
         - make test
+        - make test_integration
 
     - stage: build
       name: Build
