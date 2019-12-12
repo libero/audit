@@ -7,6 +7,7 @@ export default {
             table.string('action');
             table.string('object');
             table.string('result');
+            table.timestamp('occurred');
             table.timestamp('created').defaultTo(knex.fn.now());
         });
     },

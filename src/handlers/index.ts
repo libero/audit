@@ -15,6 +15,7 @@ export const UserLoggedInHandler = (auditDomain: AuditController) => async (
         action: 'LOGGED_IN',
         object: (event.context as { source: string }).source || '',
         result: event.payload.result,
+        occurred: event.payload.timestamp,
     };
 
     logger.info('userLoggedInReceived', event.payload);

@@ -6,10 +6,12 @@ describe('Audit controller', () => {
             putLog: jest.fn(),
         };
         const controller = new AuditController(repo);
+        const date = new Date();
         const item = {
             entity: 'foo',
             action: 'bar',
             object: 'baz',
+            occurred: date,
         };
 
         controller.recordAudit(item);
@@ -18,6 +20,7 @@ describe('Audit controller', () => {
             entity: 'foo',
             action: 'bar',
             object: 'baz',
+            occurred: date,
         });
     });
 });

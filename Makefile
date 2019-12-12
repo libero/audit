@@ -17,9 +17,11 @@ test: get_deps
 	yarn test
 
 test_integration:
+	- ${DOCKER_COMPOSE_TEST} down -v
 	${DOCKER_COMPOSE_TEST} up -d postgres
+	yarn run migrate run
 	yarn run test:integration
-	${DOCKER_COMPOSE_TEST} down
+	${DOCKER_COMPOSE_TEST} down -v
 	
 build:
 	${DOCKER_COMPOSE} build audit 
