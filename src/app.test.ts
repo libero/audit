@@ -6,14 +6,16 @@ import { InfraLogger } from './logger';
 import { ConfigType } from './config';
 
 jest.mock('knex');
-jest.mock('express', () => (): Express => (({
-    use: jest.fn(),
-    get: jest.fn(),
-    listen: jest.fn().mockImplementation(() => ({
-        on: jest.fn(),
-        close: jest.fn().mockImplementation(() => Promise.resolve()),
-    })),
-} as unknown) as Express));
+jest.mock('express', () => (): Express =>
+    (({
+        use: jest.fn(),
+        get: jest.fn(),
+        listen: jest.fn().mockImplementation(() => ({
+            on: jest.fn(),
+            close: jest.fn().mockImplementation(() => Promise.resolve()),
+        })),
+    } as unknown) as Express),
+);
 jest.mock('@libero/event-bus', () => ({
     RabbitEventBus: jest.fn(),
 }));
@@ -29,7 +31,7 @@ jest.mock('./repo/audit', () => ({
     KnexAuditRepository: jest.fn(),
 }));
 jest.mock('./handlers', () => ({
-    UserLoggedInHandler: jest.fn().mockImplementation(() => 'logged_in_handler')
+    UserLoggedInHandler: jest.fn().mockImplementation(() => 'logged_in_handler'),
 }));
 
 describe('App', (): void => {
@@ -39,10 +41,10 @@ describe('App', (): void => {
     describe('startup', () => {
         beforeEach(() => {
             (InfraLogger.info as jest.Mock).mockClear();
-            mockEventBus = {
+            mockEventBus = ({
                 init: jest.fn().mockReturnThis(),
                 subscribe: jest.fn(),
-            } as unknown as EventBus;
+            } as unknown) as EventBus;
         });
 
         // for some reason uncommenting this gives timeout
@@ -62,7 +64,10 @@ describe('App', (): void => {
             await app.startup();
 
             expect(mockEventBus.subscribe).toBeCalledTimes(1);
-            expect(mockEventBus.subscribe).toHaveBeenCalledWith(LiberoEventType.userLoggedInIdentifier, 'logged_in_handler');
+            expect(mockEventBus.subscribe).toHaveBeenCalledWith(
+                LiberoEventType.userLoggedInIdentifier,
+                'logged_in_handler',
+            );
         });
 
         it('logs that the service has started', async (): Promise<void> => {

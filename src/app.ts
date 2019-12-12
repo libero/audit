@@ -12,7 +12,6 @@ import { AuditController } from './domain/audit';
 import { UserLoggedInHandler } from './handlers';
 import { HealthCheck } from './endpoints';
 
-
 class App {
     private auditRepository: AuditRepository;
 
@@ -52,7 +51,7 @@ class App {
         this.expressServer.on('close', async () => {
             await this.knex.destroy();
         });
-    
+
         Logger.info('Audit service started');
     }
 
@@ -60,7 +59,7 @@ class App {
         return new Promise(resolve => this.expressServer.close(() => resolve()));
     }
 
-    public getKnex () {
+    public getKnex() {
         return this.knex;
     }
 }

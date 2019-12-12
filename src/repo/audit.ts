@@ -15,8 +15,10 @@ export class KnexAuditRepository implements AuditRepository {
     }
 
     public async exists(id: string): Promise<boolean> {
-        const row = await this.knex('audit').where('entity', id).first();
+        const row = await this.knex('audit')
+            .where('entity', id)
+            .first();
 
-        return Promise.resolve(row !== null)
+        return Promise.resolve(row !== null);
     }
 }
