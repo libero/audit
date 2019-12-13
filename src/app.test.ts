@@ -51,7 +51,7 @@ describe('App', (): void => {
         // afterEach(async () => { await app.shutdown(); });
 
         it('initiates event bus instance with correct eventDefinitions and serviceName ', async (): Promise<void> => {
-            app = new App({} as ConfigType, mockEventBus);
+            app = new App({ config: {} as ConfigType, eventBus: mockEventBus });
 
             await app.startup();
 
@@ -59,7 +59,7 @@ describe('App', (): void => {
         });
 
         it('subscribes to the userLoggedInIdentifier message type', async (): Promise<void> => {
-            app = new App({} as ConfigType, mockEventBus);
+            app = new App({ config: {} as ConfigType, eventBus: mockEventBus });
 
             await app.startup();
 
@@ -71,7 +71,7 @@ describe('App', (): void => {
         });
 
         it('logs that the service has started', async (): Promise<void> => {
-            app = new App({} as ConfigType, mockEventBus);
+            app = new App({ config: {} as ConfigType, eventBus: mockEventBus });
 
             await app.startup();
 
