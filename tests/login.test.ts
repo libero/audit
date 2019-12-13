@@ -14,7 +14,7 @@ afterAll(async () => {
     await app.shutdown();
 })
 
-describe('audit', (): void => {
+describe('login', (): void => {
     it('stores user logged in event in database', async () => {
         const date = new Date();
         const event: Event<UserLoggedInPayload> = {
