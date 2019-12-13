@@ -5,15 +5,14 @@ import App from './app';
 import { InfraLogger } from './logger';
 import { ConfigType } from './config';
 
+let mockServer;
+
 jest.mock('knex');
 jest.mock('express', () => (): Express =>
     (({
         use: jest.fn(),
         get: jest.fn(),
-        listen: jest.fn().mockImplementation(() => ({
-            on: jest.fn(),
-            close: jest.fn().mockImplementation(() => Promise.resolve()),
-        })),
+        listen: jest.fn().mockImplementation(() => mockServer),
     } as unknown) as Express),
 );
 jest.mock('@libero/event-bus', () => ({
@@ -38,17 +37,24 @@ describe('App', (): void => {
     let mockEventBus;
     let app;
 
-    describe('startup', () => {
-        beforeEach(() => {
-            (InfraLogger.info as jest.Mock).mockClear();
-            mockEventBus = ({
-                init: jest.fn().mockReturnThis(),
-                subscribe: jest.fn(),
-            } as unknown) as EventBus;
-        });
+    beforeEach((): void => {
+        (InfraLogger.info as jest.Mock).mockClear();
+        mockEventBus = ({
+            init: jest.fn().mockReturnThis(),
+            subscribe: jest.fn(),
+        } as unknown) as EventBus;
+        mockServer = {
+            on: jest.fn(),
+            close: cb => cb(),
+        };
+    });
 
-        // for some reason uncommenting this gives timeout
-        // afterEach(async () => { await app.shutdown(); });
+    describe('startup', (): void => {
+        afterEach(
+            async (): Promise<void> => {
+                await app.shutdown();
+            },
+        );
 
         it('initiates event bus instance with correct eventDefinitions and serviceName ', async (): Promise<void> => {
             app = new App({ config: {} as ConfigType, eventBus: mockEventBus });
@@ -76,6 +82,21 @@ describe('App', (): void => {
             await app.startup();
 
             expect(InfraLogger.info).toBeCalledWith('Audit service started');
+        });
+    });
+
+    describe('shutdown', (): void => {
+        it('calls callback on shutdown', async (): Promise<void> => {
+            mockServer = {
+                on: jest.fn(),
+                close: jest.fn().mockImplementation(cb => cb()),
+            };
+            app = new App({ config: {} as ConfigType, eventBus: mockEventBus });
+
+            await app.startup();
+            await app.shutdown();
+
+            expect(mockServer.close).toHaveBeenCalledTimes(1);
         });
     });
 });

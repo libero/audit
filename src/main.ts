@@ -13,4 +13,8 @@ const main = async (): Promise<void> => {
     await app.startup();
 };
 
-main();
+if (require.main === module) {
+    main();
+}
+
+export default main;
