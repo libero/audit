@@ -45,7 +45,7 @@ describe('App', (): void => {
         } as unknown) as EventBus;
         mockServer = {
             on: jest.fn(),
-            close: cb => cb(),
+            close: (cb: () => void) => cb(),
         };
     });
 
