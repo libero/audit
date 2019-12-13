@@ -5,12 +5,17 @@ import { Request, Response, Express } from 'express';
 import { EventBus } from '@libero/event-bus';
 import { UserLoggedInPayload, LiberoEventType } from '@libero/event-types';
 import { InfraLogger as Logger } from './logger';
-import { ConfigType } from './config';
+import { ConfigType, serviceConfig } from './config';
 import { AuditRepository } from './domain/types';
 import { KnexAuditRepository } from './repo/audit';
 import { AuditController } from './domain/audit';
 import { UserLoggedInHandler } from './handlers';
 import { HealthCheck } from './endpoints';
+
+interface ConstructorArgs {
+    config?: ConfigType;
+    eventBus: EventBus;
+}
 
 class App {
     private auditRepository: AuditRepository;
@@ -21,9 +26,21 @@ class App {
 
     private knex: Knex<any, unknown[]>;
 
-    public constructor(readonly config: ConfigType, readonly eventBus: EventBus) {}
+    private config: ConfigType;
 
-    public async startup() {
+    private readonly eventBus: EventBus;
+
+    public constructor({ config, eventBus }: ConstructorArgs) {
+        if (config) {
+            this.config = config;
+        } else {
+            this.config = serviceConfig();
+        }
+
+        this.eventBus = eventBus;
+    }
+
+    public async startup(): Promise<void> {
         this.knex = Knex(this.config.knex);
         this.auditRepository = new KnexAuditRepository(this.knex);
 
@@ -59,7 +76,7 @@ class App {
         return new Promise(resolve => this.expressServer.close(() => resolve()));
     }
 
-    public getKnex() {
+    public getKnex(): Knex {
         return this.knex;
     }
 }

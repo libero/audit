@@ -1,40 +1,17 @@
 import { v4 } from 'uuid';
 import { MockEventBus, Event } from '@libero/event-bus';
-import { ConfigType } from '../src/config';
 import { UserLoggedInPayload, LiberoEventType } from '@libero/event-types';
 import App from '../src/app';
 
-let app: App;
 const eventBus = new MockEventBus();
-const bootstrap = async (): Promise<void> => {
-    const config: ConfigType = {
-        port: 3004,
-        event: {
-            url: 'localhost'
-        },
-        knex: {
-            client: 'pg',
-            connection: {
-                host: 'localhost',
-                database: 'postgres',
-                user: 'postgres',
-                password: 'postgres',
-                port: 5432,
-            },
-        }
-    };
-
-    app = new App(config, eventBus);
-
-    app.startup();
-};
+const app = new App({eventBus});
 
 beforeAll(async () => {
-    bootstrap();
+    await app.startup();
 });
 
 afterAll(async () => {
-    app.shutdown();
+    await app.shutdown();
 })
 
 describe('audit', (): void => {
