@@ -5,7 +5,7 @@ import { Request, Response, Express } from 'express';
 import { EventBus } from '@libero/event-bus';
 import { UserLoggedInPayload, LiberoEventType } from '@libero/event-types';
 import { InfraLogger as Logger } from './logger';
-import { ConfigType, serviceConfig } from './config';
+import { ConfigType, getServiceConfig } from './config';
 import { AuditRepository } from './domain/types';
 import { KnexAuditRepository } from './repo/audit';
 import { AuditController } from './domain/audit';
@@ -34,7 +34,7 @@ class App {
         if (config) {
             this.config = config;
         } else {
-            this.config = serviceConfig();
+            this.config = getServiceConfig();
         }
 
         this.eventBus = eventBus;

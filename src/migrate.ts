@@ -1,10 +1,10 @@
 import { Cli } from '@libero/migrator';
-import { serviceConfig } from './config';
+import { getServiceConfig } from './config';
 
 const cli = new Cli({
     banner: 'Libero Reviewer Audit Service: Migration tool',
     name: 'migrate',
-    knexConfig: serviceConfig().knex,
+    knexConfig: getServiceConfig().knex,
     migrations: {
         path: `${__dirname}/migrations`,
         pattern: /.*\.ts/,

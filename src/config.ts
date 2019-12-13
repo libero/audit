@@ -20,7 +20,7 @@ export type ConfigType = {
     event: EventConfig;
 };
 
-export const serviceConfig = (): ConfigType => {
+export const getServiceConfig = (): ConfigType => {
     const configPath = process.env.CONFIG_PATH ? process.env.CONFIG_PATH : '/etc/reviewer/config.json';
     const config: Config = JSON.parse(readFileSync(configPath, 'utf8'));
 
@@ -46,4 +46,4 @@ export const serviceConfig = (): ConfigType => {
     };
 };
 
-export default serviceConfig;
+export default getServiceConfig;
