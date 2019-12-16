@@ -1,10 +1,20 @@
 // Startup the audit service
+import { RabbitEventBus } from '@libero/event-bus';
 import { InfraLogger as logger } from './logger';
-import setup from './setup';
-import config from 'config';
+import { getServiceConfig } from './config';
+import App from './app';
 
-setup(config).then(app =>
-    app.listen(config.port, () => {
-        logger.info(`Audit service listening on port ${config.port}`);
-    }),
-);
+const main = async (): Promise<void> => {
+    logger.info('serviceInit');
+
+    const config = getServiceConfig();
+    const app = new App({ config, eventBus: new RabbitEventBus({ url: `amqp://${config.event.url}` }) });
+
+    await app.startup();
+};
+
+if (require.main === module) {
+    main();
+}
+
+export default main;

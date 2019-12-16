@@ -3,6 +3,7 @@ export interface AuditLogItem {
     action: string;
     object: string;
     result?: unknown;
+    occurred: Date;
 }
 
 export interface AuditRepository {
