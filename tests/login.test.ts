@@ -39,6 +39,13 @@ describe('login', (): void => {
         const result = await knex.table('audit').whereExists(knex.select('*').from('audit').whereRaw('audit.entity = \'user:user_Id\''));
 
         expect(result).toHaveLength(1);
+        expect(result[0]).toMatchObject({
+            entity: 'user:user_Id',
+            action: 'LOGGED_IN',
+            object: 'test',
+            result: 'authorized',
+        });
+        expect(result[0].created).toBeDefined();
         expect(result[0].occurred.toISOString()).toEqual(date.toISOString());
     });
 });
