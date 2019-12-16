@@ -18,9 +18,8 @@ test: get_deps
 
 test_integration:
 	- ${DOCKER_COMPOSE_TEST} down -v
-	${DOCKER_COMPOSE_TEST} up -d postgres
-	CONFIG_PATH=./tests/config.json yarn migrate run
-	CONFIG_PATH=./tests/config.json yarn test:integration --detectOpenHandles
+	${DOCKER_COMPOSE_TEST} up -d
+	CONFIG_PATH=./tests/config.json yarn test:integration
 	${DOCKER_COMPOSE_TEST} down -v
 	
 build:

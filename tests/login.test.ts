@@ -1,22 +1,33 @@
+import * as Knex from 'knex';
 import { v4 } from 'uuid';
-import { MockEventBus, Event } from '@libero/event-bus';
+import { RabbitEventBus, Event, EventBus } from '@libero/event-bus';
 import { UserLoggedInPayload, LiberoEventType } from '@libero/event-types';
-import App from '../src/app';
+import { getServiceConfig, ConfigType } from '../src/config';
 
-const eventBus = new MockEventBus();
-const app = new App({eventBus});
+let eventBus: EventBus;
+let config: ConfigType;
+let knex: Knex;
 
 beforeAll(async () => {
-    await app.startup();
+    config = getServiceConfig();
+
+    // we assume that the tests are run on the host, change the config to reflect that
+    (config.knex.connection as Knex.ConnectionConfig).host = 'localhost';
+    config.event.url = 'localhost';
+
+    eventBus = await new RabbitEventBus({ url: `amqp://${config.event.url}` }).init([LiberoEventType.userLoggedInIdentifier], 'service');
+    knex = Knex(config.knex);
 });
 
 afterAll(async () => {
-    await app.shutdown();
-})
+    await eventBus.destroy();
+    await knex.destroy();
+});
 
 describe('login', (): void => {
     it('stores user logged in event in database', async () => {
         const date = new Date();
+        const userId = v4();
         const event: Event<UserLoggedInPayload> = {
             id: v4(),
             created: date,
@@ -26,7 +37,7 @@ describe('login', (): void => {
             },
             payload: {
                 name: 'name',
-                userId: 'user_Id',
+                userId,
                 email: 'foo@example.com',
                 result: 'authorized',
                 timestamp: date,
@@ -34,18 +45,18 @@ describe('login', (): void => {
         };
 
         await eventBus.publish(event);
+        await new Promise(resolve => setTimeout(resolve, 1400)); // this is not ideal
 
-        const knex = app.getKnex();
-        const result = await knex.table('audit').whereExists(knex.select('*').from('audit').whereRaw('audit.entity = \'user:user_Id\''));
-
-        expect(result).toHaveLength(1);
-        expect(result[0]).toMatchObject({
-            entity: 'user:user_Id',
+        const result = await knex.select('*').from('audit').where(`audit.entity`, `user:${userId}`).first();
+        
+        expect(result).toBeDefined();
+        expect(result).toMatchObject({
+            entity: `user:${userId}`,
             action: 'LOGGED_IN',
             object: 'test',
             result: 'authorized',
         });
-        expect(result[0].created).toBeDefined();
-        expect(result[0].occurred.toISOString()).toEqual(date.toISOString());
+        expect(result.created).toBeDefined();
+        expect(result.occurred.toISOString()).toEqual(date.toISOString());
     });
 });

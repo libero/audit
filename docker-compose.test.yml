@@ -1,5 +1,23 @@
 version: '3'
 services:
+  audit:
+    image: node:10
+    ports:
+      - "${AUDIT_PORT:-3004}:3004"
+    working_dir: "/src"
+    command: ["bash", "-c", "yarn && yarn run migrate run && yarn run start:dev"]
+    environment:
+      CONFIG_PATH: ./tests/config.json
+    volumes:
+      - ./:/src/:z
+      - ./config/:/etc/reviewer/:z
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+
   postgres:
     image: postgres:11
     ports:

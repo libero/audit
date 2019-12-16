@@ -1,6 +1,6 @@
 version: '3'
 services:
-  application:
+  audit:
     image: node:10
     ports:
       - "${AUDIT_PORT:-3004}:3004"
@@ -18,9 +18,6 @@ services:
       - "infra_rabbit"
 
 networks:
-  infra_api:
-    external:
-      name: "infra_api"
   infra_rabbit:
     external:
       name: "infra_rabbit"
