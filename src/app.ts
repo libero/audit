@@ -24,7 +24,7 @@ class App {
 
     private expressServer: Server;
 
-    private knex: Knex<any, unknown[]>;
+    private knex: Knex;
 
     private config: ConfigType;
 
