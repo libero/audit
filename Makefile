@@ -19,10 +19,10 @@ test: get_deps
 test_integration:
 	- ${DOCKER_COMPOSE_TEST} down -v
 	${DOCKER_COMPOSE_TEST} up -d postgres rabbitmq
-	./.scripts/docker/wait-healthy.sh audit_postgres_1 20
-	./.scripts/docker/wait-healthy.sh audit_rabbitmq_1 20
+	./.scripts/docker/wait-healthy.sh audit_postgres_1 60
+	./.scripts/docker/wait-healthy.sh audit_rabbitmq_1 60
 	${DOCKER_COMPOSE_TEST} up -d audit
-	./.scripts/docker/wait-healthy.sh audit_audit_1 20
+	./.scripts/docker/wait-healthy.sh audit_audit_1 60
 	CONFIG_PATH=./tests/config.json yarn test:integration
 	${DOCKER_COMPOSE_TEST} down -v
 	
