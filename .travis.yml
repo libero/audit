@@ -31,5 +31,7 @@ jobs:
     - stage: test_integration
       language: node_js
       name: Test Integration
+      node_js:
+        - 10.16.3
       script: make test_integration
 
