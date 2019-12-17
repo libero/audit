@@ -2,6 +2,7 @@ version: '3'
 services:
   audit:
     image: node:10
+    container_name: test_audit
     ports:
       - "${AUDIT_PORT:-3004}:3004"
     working_dir: "/src"
@@ -22,6 +23,7 @@ services:
 
   rabbitmq:
     image: rabbitmq:3-management
+    container_name: test_rabbitmq
     ports:
       - "15672:15672"
       - "5672:5672"
@@ -33,6 +35,7 @@ services:
 
   postgres:
     image: postgres:11
+    container_name: test_postgres
     ports:
       - "5432:5432"
     volumes:
