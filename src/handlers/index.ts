@@ -10,6 +10,8 @@ export type EventHandler<T extends object> = (...args) => (ev: Event<T>) => Prom
 export const UserLoggedInHandler = (auditDomain: AuditController) => async (
     event: Event<UserLoggedInPayload>,
 ): Promise<boolean> => {
+    // await new Promise(resolve => setTimeout(resolve, 2000));
+
     const auditItem: AuditLogItem = {
         entity: `user:${event.payload.userId}`,
         action: 'LOGGED_IN',

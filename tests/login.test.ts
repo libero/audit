@@ -24,6 +24,24 @@ afterAll(async () => {
     await knex.destroy();
 });
 
+const poll = (fn: (...args: unknown[]) => boolean|Promise<boolean>, timeout: number = 10000, interval: number = 100): Promise<void> => {
+    const maxDate = new Date().getTime() + timeout;
+
+    const check = async (resolve, reject) => {
+        const result = await fn();
+
+        if(result) {
+            resolve(result);
+        } else if(new Date().getTime() > maxDate){
+            reject(new Error(`timed out for ${fn}`));
+        } else {
+            setTimeout(check, interval, resolve, reject);
+        }
+    };
+
+    return new Promise(check);
+};
+
 describe('login', (): void => {
     it('stores user logged in event in database', async () => {
         const date = new Date();
@@ -45,10 +63,15 @@ describe('login', (): void => {
         };
 
         await eventBus.publish(event);
-        await new Promise(resolve => setTimeout(resolve, 1400)); // this is not ideal
 
-        const result = await knex.select('*').from('audit').where(`audit.entity`, `user:${userId}`).first();
-        
+        let result;
+
+        await poll(async (): Promise<boolean> => {
+            result = await knex.select('*').from('audit').where(`audit.entity`, `user:${userId}`).first();
+
+            return result;
+        });
+
         expect(result).toBeDefined();
         expect(result).toMatchObject({
             entity: `user:${userId}`,
