@@ -1,17 +1,12 @@
 version: '3'
 services:
   audit:
-    image: node:10
+    image: liberoadmin/audit:${IMAGE_TAG}
     container_name: test_audit
     ports:
       - "${AUDIT_PORT:-3004}:3004"
-    working_dir: "/src"
-    command: ["bash", "-c", "yarn && yarn run migrate run &&yarn run start:dev"]
     environment:
       CONFIG_PATH: ./tests/config.json
-    volumes:
-      - ./:/src/:z
-      - ./config/:/etc/reviewer/:z
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:3004/health" ]
       interval: 2s
