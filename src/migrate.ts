@@ -7,7 +7,7 @@ const cli = new Cli({
     knexConfig: getServiceConfig().knex,
     migrations: {
         path: `${__dirname}/migrations`,
-        pattern: /.*\.ts/,
+        pattern: /.*\.js$/,
     },
 });
 

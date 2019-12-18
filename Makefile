@@ -23,6 +23,7 @@ test_integration:
 	./.scripts/docker/wait-healthy.sh test_rabbitmq 20
 	${DOCKER_COMPOSE_TEST} up -d audit
 	./.scripts/docker/wait-healthy.sh test_audit 20
+	${DOCKER_COMPOSE_TEST} exec audit node dist/migrate.js run
 	CONFIG_PATH=./tests/config.json yarn test:integration
 	${DOCKER_COMPOSE_TEST} down
 	

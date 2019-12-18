@@ -1,14 +1,14 @@
 version: '3'
 services:
   audit:
-    image: liberoadmin/audit:${IMAGE_TAG}
+    image: libero/audit:local
     container_name: test_audit
     ports:
       - "${AUDIT_PORT:-3004}:3004"
     environment:
       CONFIG_PATH: ./tests/config.json
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:3004/health" ]
+      test: "curl localhost:3004/health"
       interval: 2s
       timeout: 30s
       retries: 10
