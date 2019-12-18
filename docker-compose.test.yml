@@ -1,7 +1,7 @@
 version: '3'
 services:
   audit:
-    image: liberoadmin/audit:latest
+    image: libero/audit:local
     container_name: test_audit
     ports:
       - "${AUDIT_PORT:-3004}:3004"
