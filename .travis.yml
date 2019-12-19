@@ -6,7 +6,6 @@ env:
 
 stages:
   - test
-  - build
 
 jobs:
   include:
@@ -18,14 +17,12 @@ jobs:
       script:
         - make lint
         - make test
+        - make build
         - make test_integration
-
-    - stage: build
-      name: Build
-      script: make build
       deploy:
         provider: script
         script: make push
         on:
           branch: master
+
 

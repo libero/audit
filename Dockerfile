@@ -16,6 +16,7 @@ COPY  tsconfig.build.json \
       ./
 
 COPY src/ ./src/
+COPY tests/config.json ./tests/config.json
 RUN yarn &&\
     yarn build
 
@@ -26,10 +27,13 @@ WORKDIR /app
 
 COPY --from=source /app/node_modules/ ./node_modules/
 COPY --from=source /app/dist/ ./dist/
+COPY --from=source /app/tests/config.json ./tests/config.json
 
-EXPOSE 3000
+RUN apk add curl
+
+EXPOSE 3004
 
 HEALTHCHECK --interval=1m --timeout=1s \
-	CMD curl -f http://localhost:3000/health || exit 1
+	CMD curl -f http://localhost:3004/health || exit 1
 
 CMD ["node", "dist/main.js"]

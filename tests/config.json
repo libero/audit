@@ -4,7 +4,7 @@
     "database": {
         "type": "pg",
         "name": "postgres",
-        "host": "localhost",
+        "host": "postgres",
         "username": "postgres",
         "database": "postgres",
         "port": 5432
