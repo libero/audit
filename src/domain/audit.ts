@@ -1,9 +1,9 @@
-import { AuditRepository, AuditLogItem } from './types';
+import { AuditRepository, DtoAuditLog } from './types';
 
 export class AuditController {
     public constructor(private readonly auditRepo: AuditRepository) {}
 
-    public async recordAudit(item: AuditLogItem): Promise<boolean> {
+    public async recordAudit(item: DtoAuditLog): Promise<boolean> {
         return this.auditRepo.putLog(item);
     }
 }
