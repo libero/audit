@@ -29,7 +29,7 @@ services:
       retries: 10
 
   postgres:
-    image: reviewer-xpub-postgres
+    image: reviewer-xpub-postgres:latest
     container_name: test_postgres
     ports:
       - "5432:5432"
