@@ -45,12 +45,16 @@ describe('UserLoggedInHandler', () => {
 
         expect(recordAudit).toHaveBeenCalledTimes(1);
 
-        expect(auditItem.userId).toBe(userId);
-        expect(auditItem.action).toBe('LOGGED_IN');
-        expect(auditItem.value).toBe('authorized');
-        expect(auditItem.objectType).toBe('User');
-        expect(auditItem.objectId).toBe(userId);
-        expect(auditItem.created).toBe(timestamp);
-        expect(auditItem.updated).toBe(timestamp);
+        expect(auditItem).toEqual(
+            expect.objectContaining({
+                userId,
+                action: 'LOGGED_IN',
+                value: 'authorized',
+                objectType: 'User',
+                objectId: userId,
+                created: timestamp,
+                updated: timestamp,
+            }),
+        );
     });
 });
