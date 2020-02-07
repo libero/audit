@@ -1,3 +1,11 @@
+# Database Schema
+
+In order to achieve parity we are initially using the xpub schema.
+The new schema below is where we'd like to be heading.
+
+## New Schema
+
+```{js}
 import * as Knex from 'knex';
 
 export default {
@@ -16,3 +24,4 @@ export default {
         return knex.schema.dropTable('audit');
     },
 };
+```
