@@ -6,7 +6,7 @@
         "name": "postgres",
         "host": "postgres",
         "username": "postgres",
-        "database": "xpublegacy",
+        "database": "postgres",
         "port": 5432
     }
 }

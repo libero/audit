@@ -15,7 +15,10 @@ beforeAll(async () => {
     (config.knex.connection as Knex.ConnectionConfig).host = 'localhost';
     config.event.url = 'localhost';
 
-    eventBus = await new RabbitEventBus({ url: `amqp://${config.event.url}` }).init([LiberoEventType.userLoggedInIdentifier], 'service');
+    eventBus = await new RabbitEventBus({ url: `amqp://${config.event.url}` }).init(
+        [LiberoEventType.userLoggedInIdentifier],
+        'service',
+    );
     knex = Knex(config.knex);
 });
 
@@ -24,15 +27,19 @@ afterAll(async () => {
     await knex.destroy();
 });
 
-const poll = (fn: (...args: unknown[]) => boolean|Promise<boolean>, timeout: number = 10000, interval: number = 100): Promise<void> => {
+const poll = (
+    fn: (...args: unknown[]) => boolean | Promise<boolean>,
+    timeout = 10000,
+    interval = 100,
+): Promise<void> => {
     const maxDate = new Date().getTime() + timeout;
 
     const check = async (resolve, reject) => {
         const result = await fn();
 
-        if(result) {
+        if (result) {
             resolve(result);
-        } else if(new Date().getTime() > maxDate){
+        } else if (new Date().getTime() > maxDate) {
             reject(new Error(`timed out for ${fn}`));
         } else {
             setTimeout(check, interval, resolve, reject);
@@ -66,20 +73,28 @@ describe('login', (): void => {
 
         let result;
 
-        await poll(async (): Promise<boolean> => {
-            result = await knex.select('*').from('audit').where(`audit.entity`, `user:${userId}`).first();
+        await poll(
+            async (): Promise<boolean> => {
+                result = await knex
+                    .select('*')
+                    .from('audit_log')
+                    .withSchema('public')
+                    .where(`object_id`, userId)
+                    .first();
 
-            return result;
-        });
+                return result;
+            },
+        );
 
         expect(result).toBeDefined();
         expect(result).toMatchObject({
-            entity: `user:${userId}`,
+            // eslint-disable-next-line @typescript-eslint/camelcase
+            object_id: userId,
             action: 'LOGGED_IN',
-            object: 'test',
-            result: 'authorized',
+            // eslint-disable-next-line @typescript-eslint/camelcase
+            object_type: 'User',
         });
         expect(result.created).toBeDefined();
-        expect(result.occurred.toISOString()).toEqual(date.toISOString());
+        expect(result.created.toISOString()).toEqual(date.toISOString());
     });
 });
