@@ -11,7 +11,7 @@ describe('KnexAuditRepository', (): void => {
             const mockAuditItem = ({} as unknown) as DtoAuditLog;
             const Audit = new KnexAuditRepository(mockKnex);
             await Audit.putLog(mockAuditItem);
-            expect(mockKnex).toBeCalledWith('audit');
+            expect(mockKnex).toBeCalledWith('audit_log');
         });
         it('inserts audit item passed using knex', async (): Promise<void> => {
             const mockInsert = jest.fn();
