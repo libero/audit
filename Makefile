@@ -28,6 +28,3 @@ test_integration:
 	
 build:
 	${DOCKER_COMPOSE} build audit 
-
-push:
-	${PUSH_COMMAND} audit
