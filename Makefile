@@ -5,8 +5,6 @@ DOCKER_COMPOSE = IMAGE_TAG=${IMAGE_TAG} docker-compose -f docker-compose.build.y
 
 DOCKER_COMPOSE_TEST = docker-compose -f docker-compose.test.yml
 
-PUSH_COMMAND = IMAGE_TAG=${IMAGE_TAG} .scripts/travis/push-image.sh
-
 get_deps:
 	yarn
 
