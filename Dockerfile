@@ -1,6 +1,6 @@
 ARG image_tag=latest
 
-FROM node:12.15-alpine as source
+FROM node:12-alpine@sha256:5646d1e5bc470500414feb3540186c02845db0e0e1788621c271fbf3a0c1830d as source
 MAINTAINER eLife Reviewer Product Team <reviewer-product@elifesciences.org>
 
 WORKDIR /app
@@ -20,7 +20,7 @@ COPY tests/config.json ./tests/config.json
 RUN yarn &&\
     yarn build
 
-FROM node:12.15-alpine
+FROM node:12-alpine@sha256:5646d1e5bc470500414feb3540186c02845db0e0e1788621c271fbf3a0c1830d
 MAINTAINER eLife Reviewer Product Team <reviewer-product@elifesciences.org>
 
 WORKDIR /app
